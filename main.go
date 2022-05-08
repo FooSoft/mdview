@@ -32,8 +32,9 @@ var githubStyle string
 var githubFixup string
 
 type builder struct {
-	port     int
-	browsing bool
+	port int
+	path string
+	open bool
 }
 
 func embedCss(file *goldsmith.File, doc *goquery.Document) error {
@@ -69,9 +70,9 @@ func (self *builder) Build(contentDir, buildDir, cacheDir string) {
 		log.Print(err)
 	}
 
-	if !self.browsing {
-		webbrowser.Open(fmt.Sprintf("http://127.0.0.1:%d", self.port))
-		self.browsing = true
+	if !self.open {
+		webbrowser.Open(fmt.Sprintf("http://127.0.0.1:%d/%s", self.port, self.path))
+		self.open = true
 	}
 }
 
@@ -89,8 +90,17 @@ func main() {
 		log.Fatal(err)
 	}
 
+	var contentName string
 	contentDir := requestPath
 	if !info.IsDir() {
+		contentName = filepath.Base(requestPath)
+		contentExt := filepath.Ext(contentName)
+		switch contentExt {
+		case ".md", ".markdown":
+			contentName = strings.TrimSuffix(contentName, contentExt)
+			contentName += ".html"
+		}
+
 		contentDir = filepath.Dir(requestPath)
 	}
 
@@ -107,7 +117,7 @@ func main() {
 	}()
 
 	go func() {
-		b := &builder{port: *port}
+		b := &builder{port: *port, path: contentName}
 		devserver.DevServe(b, *port, contentDir, buildDir, "")
 	}()
 
