@@ -25,10 +25,10 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 )
 
-//go:embed github-markdown.css
+//go:embed css/github-markdown.css
 var githubStyle string
 
-//go:embed github-fixup.css
+//go:embed css/github-fixup.css
 var githubFixup string
 
 type builder struct {
