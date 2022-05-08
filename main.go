@@ -71,29 +71,38 @@ func (self *builder) Build(contentDir, buildDir, cacheDir string) {
 	}
 
 	if !self.open {
-		webbrowser.Open(fmt.Sprintf("http://127.0.0.1:%d/%s", self.port, self.path))
+		url := fmt.Sprintf("http://127.0.0.1:%d/%s", self.port, self.path)
+		log.Printf("opening %s in browser...", url)
+		webbrowser.Open(url)
 		self.open = true
 	}
 }
 
 func main() {
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage %s [options] [path]\n\n", filepath.Base(os.Args[0]))
+		fmt.Fprintln(os.Stderr, "Parameters:")
+		flag.PrintDefaults()
+	}
+
 	port := flag.Int("port", 8080, "port")
 	flag.Parse()
 
 	if flag.NArg() != 1 {
-		log.Fatal("unexpected number of arguments")
+		flag.Usage()
+		os.Exit(2)
 	}
 
-	requestPath := flag.Arg(0)
-	info, err := os.Stat(requestPath)
+	path := flag.Arg(0)
+	info, err := os.Stat(path)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	var contentName string
-	contentDir := requestPath
+	contentDir := path
 	if !info.IsDir() {
-		contentName = filepath.Base(requestPath)
+		contentName = filepath.Base(path)
 		contentExt := filepath.Ext(contentName)
 		switch contentExt {
 		case ".md", ".markdown":
@@ -101,7 +110,7 @@ func main() {
 			contentName += ".html"
 		}
 
-		contentDir = filepath.Dir(requestPath)
+		contentDir = filepath.Dir(path)
 	}
 
 	buildDir, err := ioutil.TempDir("", "mvd-*")
