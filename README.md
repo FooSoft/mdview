@@ -3,7 +3,7 @@ Area = "projects"
 GitHub = "mdview"
 Layout = "page"
 Tags = ["generator", "golang", "markdown", "mdview", "mit license", "web"]
-Description = "Tool to view Github Flavored Markdown files in your web browser.
+Description = "Tool to view Github Flavored Markdown files in your web browser."
 Collection = "ProjectsActive"
 +++ -->
 
