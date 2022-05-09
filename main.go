@@ -15,6 +15,7 @@ import (
 	"github.com/FooSoft/goldsmith"
 	"github.com/FooSoft/goldsmith-components/devserver"
 	"github.com/FooSoft/goldsmith-components/plugins/document"
+	"github.com/FooSoft/goldsmith-components/plugins/frontmatter"
 	"github.com/FooSoft/goldsmith-components/plugins/livejs"
 	"github.com/FooSoft/goldsmith-components/plugins/markdown"
 	"github.com/PuerkitoBio/goquery"
@@ -61,6 +62,7 @@ func (self *builder) Build(contentDir, buildDir, cacheDir string) {
 
 	errs := goldsmith.Begin(contentDir).
 		Clean(true).
+		Chain(frontmatter.New()).
 		Chain(markdown.NewWithGoldmark(gm)).
 		Chain(livejs.New()).
 		Chain(document.New(embedCss)).
