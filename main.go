@@ -14,6 +14,8 @@ import (
 
 	"github.com/FooSoft/goldsmith"
 	"github.com/FooSoft/goldsmith-components/devserver"
+	"github.com/FooSoft/goldsmith-components/filters/operator"
+	"github.com/FooSoft/goldsmith-components/filters/wildcard"
 	"github.com/FooSoft/goldsmith-components/plugins/document"
 	"github.com/FooSoft/goldsmith-components/plugins/frontmatter"
 	"github.com/FooSoft/goldsmith-components/plugins/livejs"
@@ -60,8 +62,24 @@ func (self *builder) Build(contentDir, buildDir, cacheDir string) {
 		goldmark.WithRendererOptions(html.WithUnsafe()),
 	)
 
+	allowedPaths := []string{
+		"**/*.gif",
+		"**/*.html",
+		"**/*.jpeg",
+		"**/*.jpg",
+		"**/*.md",
+		"**/*.png",
+		"**/*.svg",
+	}
+
+	forbiddenPaths := []string{
+		"**/.*/**",
+	}
+
 	errs := goldsmith.Begin(contentDir).
 		Clean(true).
+		FilterPush(wildcard.New(allowedPaths...)).
+		FilterPush(operator.Not(wildcard.New(forbiddenPaths...))).
 		Chain(frontmatter.New()).
 		Chain(markdown.NewWithGoldmark(gm)).
 		Chain(livejs.New()).
