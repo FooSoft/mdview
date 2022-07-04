@@ -40,6 +40,6 @@ Parameters:
 
 If you already have the Go environment and toolchain set up, you can get the latest version by running:
 ```
-$ go get github.com/FooSoft/mdview
+$ go install foosoft.net/projects/mdview@latest
 ```
 Otherwise, you can use the [pre-built binaries](https://github.com/FooSoft/mdview/releases) from the project page.
