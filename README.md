@@ -1,12 +1,3 @@
-<!-- +++
-Area = "projects"
-GitHub = "mdview"
-Layout = "page"
-Tags = ["generator", "golang", "markdown", "mdview", "mit license", "web"]
-Description = "Tool to view Github Flavored Markdown files in your web browser."
-Collection = "ProjectsActive"
-+++ -->
-
 # MdView
 
 MdView is a tool for viewing [GitHub Flavored Markdown](https://github.github.com/gfm/) files in your web browser.
